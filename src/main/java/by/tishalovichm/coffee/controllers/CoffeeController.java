@@ -1,0 +1,32 @@
+package by.tishalovichm.coffee.controllers;
+
+import by.tishalovichm.coffee.dtos.in.CoffeeDtoIn;
+import by.tishalovichm.coffee.entities.Coffee;
+import by.tishalovichm.coffee.repositories.CoffeeRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequiredArgsConstructor
+@RequestMapping("coffees")
+public class CoffeeController {
+
+    private final CoffeeRepository repository;
+
+    @GetMapping
+    public Iterable<Coffee> getCoffees() {
+        return repository.findAll();
+    }
+
+    @PostMapping
+    public Coffee createCoffee(@RequestBody CoffeeDtoIn coffeeDtoIn) {
+        var coffee = new Coffee(null, coffeeDtoIn.name(), coffeeDtoIn.description());
+        return repository.save(coffee);
+    }
+
+    @PutMapping("{id}")
+    public Coffee updateCoffee(@PathVariable Long id, @RequestBody CoffeeDtoIn coffeeDtoIn) {
+        var coffee = new Coffee(id, coffeeDtoIn.name(), coffeeDtoIn.description());
+        return repository.save(coffee);
+    }
+}

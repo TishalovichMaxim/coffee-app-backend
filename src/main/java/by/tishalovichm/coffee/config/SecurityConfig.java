@@ -1,7 +1,7 @@
 package by.tishalovichm.coffee.config;
 
 import by.tishalovichm.coffee.entities.Authority;
-import org.jspecify.annotations.Nullable;
+import jakarta.annotation.Nullable;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -17,6 +17,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
@@ -43,13 +45,13 @@ public class SecurityConfig {
     @Bean
     UserDetailsService userDetailsService() {
         return new InMemoryUserDetailsManager(
-            new User("maxim", "maximspassword", List.of(Authority.READ, Authority.CREATE)),
-            new User("vasya", "vasyaspassword", List.of(Authority.READ))
+            new User("maxim", "$2a$10$kEWr2DKfhQek0tugt0W77u3VI.1/dIMMa5w1d6ZbcxUc4gmw2Lb16", List.of(Authority.READ, Authority.CREATE)),
+            new User("vasya", "$2a$10$I8wFbdzeL46/6NNvKzHLmeF1nAT3LsrPnhnNSd3ois6gO0I0Lq5N.", List.of(Authority.READ))
         );
     }
 
     @Bean
-    AuthenticationProvider authenticationProvider(UserDetailsService userDetailsService) {
+    AuthenticationProvider authenticationProvider(UserDetailsService userDetailsService, PasswordEncoder passwordEncoder) {
         return new AuthenticationProvider() {
             @Override
             public @Nullable Authentication authenticate(Authentication authentication) throws AuthenticationException {
@@ -58,10 +60,10 @@ public class SecurityConfig {
                 }
 
                 String username = (String) authentication.getPrincipal();
-                String password = (String) authentication.getCredentials();
+                String password =  (String) authentication.getCredentials();
 
                 UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-                if (!password.equals(userDetails.getPassword())) {
+                if (!passwordEncoder.matches(password, userDetails.getPassword())) {
                     throw new BadCredentialsException("Credentials are wrong");
                 }
 
@@ -122,5 +124,10 @@ public class SecurityConfig {
             throw new AuthenticationException("No provider found") {
             };
         };
+    }
+
+    @Bean
+    PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 }

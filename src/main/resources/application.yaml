@@ -10,10 +10,6 @@ spring:
     properties:
       hibernate:
         format_sql: true
-  security:
-    user:
-      name: maxim
-      password: somepassword
 logging:
   level:
     org:

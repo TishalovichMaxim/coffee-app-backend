@@ -30,6 +30,7 @@ public class SecurityConfig {
     SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) {
         http.authorizeHttpRequests(req ->
             req.requestMatchers(HttpMethod.GET, "/coffees").permitAll()
+                .requestMatchers( "/auth/sign-up").permitAll()
                 .anyRequest().authenticated()
             );
 

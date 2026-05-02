@@ -1,6 +1,5 @@
 package by.tishalovichm.coffee.config;
 
-import by.tishalovichm.coffee.entities.Authority;
 import jakarta.annotation.Nullable;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,16 +13,13 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
 import java.util.Collection;
-import java.util.List;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
@@ -40,14 +36,6 @@ public class SecurityConfig {
         http.csrf(AbstractHttpConfigurer::disable);
         http.httpBasic(withDefaults());
         return http.build();
-    }
-
-    @Bean
-    UserDetailsService userDetailsService() {
-        return new InMemoryUserDetailsManager(
-            new User("maxim", "$2a$10$kEWr2DKfhQek0tugt0W77u3VI.1/dIMMa5w1d6ZbcxUc4gmw2Lb16", List.of(Authority.READ, Authority.CREATE)),
-            new User("vasya", "$2a$10$I8wFbdzeL46/6NNvKzHLmeF1nAT3LsrPnhnNSd3ois6gO0I0Lq5N.", List.of(Authority.READ))
-        );
     }
 
     @Bean

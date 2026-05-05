@@ -4,6 +4,7 @@ import by.tishalovichm.coffee.dtos.in.CoffeeDtoIn;
 import by.tishalovichm.coffee.entities.Coffee;
 import by.tishalovichm.coffee.repositories.CoffeeRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -22,6 +23,14 @@ public class CoffeeController {
     public Coffee createCoffee(@RequestBody CoffeeDtoIn coffeeDtoIn) {
         var coffee = new Coffee(null, coffeeDtoIn.name(), coffeeDtoIn.description());
         return repository.save(coffee);
+    }
+
+    @GetMapping("proposal")
+    public String proposal() {
+        String username = SecurityContextHolder.getContext()
+            .getAuthentication().getPrincipal().toString();
+
+        return "It's time to taste latte, %s!".formatted(username);
     }
 
     @PutMapping("{id}")

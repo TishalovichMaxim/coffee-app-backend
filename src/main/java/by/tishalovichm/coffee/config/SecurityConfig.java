@@ -1,5 +1,6 @@
 package by.tishalovichm.coffee.config;
 
+import by.tishalovichm.coffee.auth.CustomBasicAuthenticationEntryPoint;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -8,8 +9,6 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-
-import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
 public class SecurityConfig {
@@ -23,7 +22,8 @@ public class SecurityConfig {
             );
 
         http.csrf(AbstractHttpConfigurer::disable);
-        http.httpBasic(withDefaults());
+        http.httpBasic(httpBasic ->
+            httpBasic.authenticationEntryPoint(new CustomBasicAuthenticationEntryPoint()));
         return http.build();
     }
 

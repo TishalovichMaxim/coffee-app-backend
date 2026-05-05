@@ -1,5 +1,6 @@
 package by.tishalovichm.coffee.config;
 
+import by.tishalovichm.coffee.auth.CustomAccessDeniedHandler;
 import by.tishalovichm.coffee.auth.CustomBasicAuthenticationEntryPoint;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,7 +17,7 @@ public class SecurityConfig {
     @Bean
     SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) {
         http.authorizeHttpRequests(req ->
-            req.requestMatchers(HttpMethod.GET, "/coffees").permitAll()
+            req.requestMatchers(HttpMethod.GET, "/coffees").denyAll()
                 .requestMatchers( "/auth/sign-up").permitAll()
                 .anyRequest().authenticated()
             );
@@ -24,6 +25,8 @@ public class SecurityConfig {
         http.csrf(AbstractHttpConfigurer::disable);
         http.httpBasic(httpBasic ->
             httpBasic.authenticationEntryPoint(new CustomBasicAuthenticationEntryPoint()));
+        http.exceptionHandling(c ->
+            c.accessDeniedHandler(new CustomAccessDeniedHandler()));
         return http.build();
     }
 

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("coffees")
+@CrossOrigin(origins = "http://localhost:9090")
 public class CoffeeController {
 
     private final CoffeeRepository repository;

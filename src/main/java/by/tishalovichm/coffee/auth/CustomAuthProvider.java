@@ -13,8 +13,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-
 @Component
 @RequiredArgsConstructor
 @Profile("!test")
@@ -36,7 +34,7 @@ public class CustomAuthProvider implements AuthenticationProvider {
             throw new BadCredentialsException("Credentials are wrong");
         }
 
-        return new UsernamePasswordAuthenticationToken(username, password, List.of());
+        return new UsernamePasswordAuthenticationToken(username, password, userDetails.getAuthorities());
     }
 
     @Override

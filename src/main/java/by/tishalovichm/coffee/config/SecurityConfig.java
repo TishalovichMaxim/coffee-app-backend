@@ -17,17 +17,24 @@ public class SecurityConfig {
     @Bean
     SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) {
         http
+            .csrf(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests(req ->
-            req.requestMatchers(HttpMethod.GET, "/api/coffees", "/api/coffees/*").permitAll()
-                .requestMatchers( "/api/auth/sign-up", "/api/coffees/proposal/json").permitAll()
-                .anyRequest().authenticated()
+                req.requestMatchers(HttpMethod.GET, "/api/coffees", "/api/coffees/*").permitAll()
+                    .requestMatchers(HttpMethod.POST, "/api/auth/sign-up", "/api/coffees/proposal/json").permitAll()
+                    .requestMatchers(HttpMethod.POST, "/api/coffees").hasAuthority("CREATE")
+                    .requestMatchers(HttpMethod.PUT, "/api/coffees/*").hasAuthority("UPDATE")
+                    .requestMatchers(HttpMethod.DELETE, "/api/coffees/*").hasAuthority("DELETE")
+                    .anyRequest().authenticated()
             );
 
-        http.csrf(AbstractHttpConfigurer::disable);
-        http.httpBasic(httpBasic ->
-            httpBasic.authenticationEntryPoint(new CustomBasicAuthenticationEntryPoint()));
+
+        http.httpBasic(c ->
+            c.authenticationEntryPoint(new CustomBasicAuthenticationEntryPoint())
+        );
+
         http.exceptionHandling(c ->
             c.accessDeniedHandler(new CustomAccessDeniedHandler()));
+
         return http.build();
     }
 

@@ -44,4 +44,9 @@ public class CoffeeController {
         var coffee = new Coffee(id, coffeeDtoIn.name(), coffeeDtoIn.description());
         return repository.save(coffee);
     }
+
+    @DeleteMapping("{id}")
+    public void deleteCoffee(@PathVariable Long id) {
+        repository.deleteById(id);
+    }
 }

@@ -18,3 +18,5 @@ logging:
     org:
       springframework:
         security: TRACE
+jwt:
+  secret: somereaaaaaaaaaaaaaaaaaalllllllllllyyystrongsecret

@@ -1,9 +1,9 @@
 package by.tishalovichm.coffee.controllers;
 
 import by.tishalovichm.coffee.dtos.in.UserDtoIn;
+import by.tishalovichm.coffee.dtos.out.TokenDtoOut;
 import by.tishalovichm.coffee.services.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,8 +16,12 @@ public class AuthController {
     private final UserService userService;
 
     @PostMapping("sign-up")
-    public ResponseEntity<String> signUp(@RequestBody UserDtoIn userDtoIn) {
-        userService.createNewUser(userDtoIn);
-        return ResponseEntity.ok("Success");
+    public TokenDtoOut signUp(@RequestBody UserDtoIn userDtoIn) {
+        return userService.signUp(userDtoIn);
+    }
+
+    @PostMapping("sign-in")
+    public TokenDtoOut signIn(@RequestBody UserDtoIn userDtoIn) {
+        return userService.signIn(userDtoIn);
     }
 }
